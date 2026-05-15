@@ -1,6 +1,6 @@
 /**
- * app.js – Logique frontend pour index.html
- * Charge data/events-2026.json et met à jour le DOM.
+ * app.js – Frontend index.html
+ * Embed YouTube replay et its-live.net live dans une modale plein écran.
  */
 
 (function () {
@@ -11,130 +11,192 @@
 
   // ── Utilitaires ──────────────────────────────────────────────────────────
 
-  function formatDate(iso) {
+  function escHtml(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatFullDate(iso) {
     if (!iso) return '—';
     return new Date(iso).toLocaleDateString('fr-FR', {
       timeZone: TZ, weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
     });
   }
 
-  function formatDateTime(iso) {
+  function formatDateShort(iso, approximate) {
     if (!iso) return '—';
-    return new Date(iso).toLocaleString('fr-FR', {
-      timeZone: TZ, weekday: 'short', day: 'numeric', month: 'short',
-      year: 'numeric', hour: '2-digit', minute: '2-digit'
-    });
+    const d    = new Date(iso);
+    const date = d.toLocaleDateString('fr-FR', { timeZone: TZ, day: 'numeric', month: 'short' });
+    const time = d.toLocaleTimeString('fr-FR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
+    return `${date} · ${approximate ? '~' : ''}${time}`;
   }
 
-  function formatDateShort(iso) {
-    if (!iso) return '—';
-    return new Date(iso).toLocaleDateString('fr-FR', {
-      timeZone: TZ, day: 'numeric', month: 'short', year: 'numeric'
-    });
+  function formatTime(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleTimeString('fr-FR', { timeZone: TZ, hour: '2-digit', minute: '2-digit' });
   }
 
   function statusLabel(status) {
     const map = {
-      upcoming: { cls: 'status-upcoming', icon: '🕐', text: 'À venir' },
-      live:     { cls: 'status-live',     icon: '🔴', text: 'En cours' },
-      done:     { cls: 'status-done',     icon: '✓',  text: 'Terminé'  },
-      finished: { cls: 'status-done',     icon: '✓',  text: 'Terminé'  },
+      upcoming: { cls: 'status-upcoming', text: 'À venir' },
+      live:     { cls: 'status-live',     text: '🔴 En cours' },
+      done:     { cls: 'status-done',     text: '✓ Terminé' },
+      finished: { cls: 'status-done',     text: '✓ Terminé' },
     };
     return map[status] || map.upcoming;
   }
 
-  function linkBtn(url, cls, icon, label) {
-    if (!url) return '';
-    return `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="btn ${cls}">${icon} ${label}</a>`;
+  // ── Embed URLs ────────────────────────────────────────────────────────────
+
+  /** Extrait l'ID YouTube depuis une URL watch?v= ou youtu.be */
+  function youtubeEmbedUrl(url) {
+    if (!url) return null;
+    const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1&rel=0` : null;
   }
 
-  function escHtml(s) {
-    return String(s)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+  /**
+   * URL embed pour its-live.net.
+   * Format page : https://www.its-live.net/live/rallycrossfr/2026/lessay/live
+   * Le site its-live.net ne propose pas d'iframe officiel, mais on peut tenter
+   * d'afficher la page elle-même en iframe. Si bloqué (X-Frame-Options), on
+   * ouvre dans un nouvel onglet à la place.
+   */
+  function liveEmbedUrl(url) {
+    if (!url) return null;
+    return url; // tentative d'embed direct — géré par la modale avec fallback
+  }
+
+  // ── Modale player ─────────────────────────────────────────────────────────
+
+  let overlay, iframeWrap;
+
+  function initModal() {
+    overlay = document.createElement('div');
+    overlay.className = 'player-overlay';
+    overlay.innerHTML = `
+      <div class="player-box">
+        <button class="player-close" title="Fermer">✕</button>
+        <div class="player-iframe-wrap" id="player-iframe-wrap"></div>
+      </div>`;
+    document.body.appendChild(overlay);
+    iframeWrap = document.getElementById('player-iframe-wrap');
+
+    overlay.querySelector('.player-close').addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  }
+
+  function openModal(embedUrl, title) {
+    if (!overlay) return;
+    iframeWrap.innerHTML = `<iframe src="${escHtml(embedUrl)}" allowfullscreen allow="autoplay; fullscreen" title="${escHtml(title || '')}"></iframe>`;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    if (!overlay) return;
+    overlay.classList.remove('open');
+    iframeWrap.innerHTML = '';          // stop la vidéo
+    document.body.style.overflow = '';
+  }
+
+  // ── Boutons (boutons embed + lien externe fallback) ───────────────────────
+
+  /**
+   * Bouton qui :
+   *  - pour YouTube → ouvre l'embed dans la modale
+   *  - pour its-live → ouvre l'embed dans la modale (fallback nouvel onglet si bloqué)
+   *  - sinon → lien externe simple
+   */
+  function embedBtn(url, cls, label, isLive) {
+    if (!url) return '';
+    const yt  = youtubeEmbedUrl(url);
+    const src = yt || (isLive ? liveEmbedUrl(url) : null);
+
+    if (src) {
+      const title = isLive ? 'Direct Live' : 'Replay';
+      return `<button class="btn ${cls}" onclick="window.__openPlayer(${JSON.stringify(src)}, ${JSON.stringify(title)})">${label}</button>`;
+    }
+    return `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="btn ${cls}">${label}</a>`;
+  }
+
+  function externalBtn(url, cls, label) {
+    if (!url) return '';
+    return `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="btn ${cls}">${label}</a>`;
+  }
+
+  /** Retourne les boutons selon le statut uniquement */
+  function eventButtons(ev) {
+    const s = ev.status;
+    if (s === 'live') {
+      return embedBtn(ev.liveUrl || ev.livePageUrl, 'btn-live', '🔴 Live', true);
+    }
+    if (s === 'finished' || s === 'done') {
+      return [
+        embedBtn(ev.replayUrl,  'btn-replay',  '▶ Replay', false),
+        externalBtn(ev.resultsUrl, 'btn-results', '📊 Résultats'),
+      ].filter(Boolean).join(' ');
+    }
+    return ''; // upcoming → rien
   }
 
   // ── Compte à rebours ─────────────────────────────────────────────────────
 
-  function startCountdown(targetIso, containerId) {
-    const el = document.getElementById(containerId);
+  function startCountdown(targetIso) {
+    const el = document.getElementById('countdown');
     if (!el) return;
-
     function tick() {
       const diff = new Date(targetIso) - Date.now();
-      if (diff <= 0) {
-        el.innerHTML = '<span class="countdown-value">LIVE</span>';
-        return;
-      }
+      if (diff <= 0) { el.innerHTML = '<span class="countdown-value">🔴 LIVE</span>'; return; }
       const d = Math.floor(diff / 86400000);
       const h = Math.floor((diff % 86400000) / 3600000);
       const m = Math.floor((diff % 3600000) / 60000);
       const s = Math.floor((diff % 60000) / 1000);
-
-      if (d > 0) {
-        el.innerHTML = `
-          <span class="countdown-value">${d}j ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m</span>
-          <span class="countdown-label">avant le départ</span>`;
-      } else {
-        el.innerHTML = `
-          <span class="countdown-value">${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}</span>
-          <span class="countdown-label">avant le départ</span>`;
-      }
+      const val = d > 0
+        ? `${d}j ${String(h).padStart(2,'0')}h ${String(m).padStart(2,'0')}m`
+        : `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.innerHTML = `<span class="countdown-value">${val}</span><span class="countdown-label">avant le départ</span>`;
     }
-
     tick();
     setInterval(tick, 1000);
   }
 
   // ── Prochaine épreuve ────────────────────────────────────────────────────
 
-  function renderNextEvent(event) {
+  function renderNextEvent(ev) {
     const card = document.getElementById('next-event-card');
     if (!card) return;
 
-    if (!event) {
-      card.innerHTML = `
-        <div class="no-data">
-          <div class="no-data-icon">🏁</div>
-          <p>Aucune épreuve à venir trouvée.</p>
-          <small>Le calendrier sera mis à jour automatiquement.</small>
-        </div>`;
+    if (!ev) {
+      card.innerHTML = `<div class="no-data"><div class="no-data-icon">🏁</div><p>Saison terminée ou calendrier non chargé.</p></div>`;
       return;
     }
 
-    const liveBtn    = linkBtn(event.liveUrl,    'btn-live',    '📺', 'Direct');
-    const replayBtn  = linkBtn(event.replayUrl,  'btn-replay',  '🎬', 'Replay');
-    const resultsBtn = linkBtn(event.resultsUrl, 'btn-results', '📊', 'Résultats');
-    const noLive     = !event.liveUrl
-      ? '<span class="btn btn-disabled">📺 Lien live non encore disponible</span>'
-      : '';
+    const lieu    = [ev.city, ev.region].filter(Boolean).join(', ');
+    const heure   = formatTime(ev.startDateTime);
+    const dateStr = ev.startDateTime
+      ? `${formatFullDate(ev.startDateTime)} · ${ev.approximate ? '~' : ''}${heure}`
+      : '—';
+    const links   = eventButtons(ev);
 
     card.innerHTML = `
-      <div>
-        <div class="label">Prochaine épreuve D3 • Saison 2026</div>
-        <div class="event-name">${escHtml(event.name)}</div>
-        <div class="event-meta">
-          ${event.startDateTime ? `<span>📅 ${formatDate(event.startDateTime)}${event.approximate ? ' <em style="font-size:.85em">(heure approx.)</em>' : ` à ${new Date(event.startDateTime).toLocaleTimeString('fr-FR', { timeZone: TZ, hour:'2-digit', minute:'2-digit' })}`}</span>` : ''}
-          ${event.circuit  ? `<span>🏟️ ${escHtml(event.circuit)}</span>` : ''}
-          ${event.location ? `<span>📍 ${escHtml(event.location)}</span>` : ''}
-          ${event.round    ? `<span>Manche ${event.round}</span>` : ''}
+      <div class="nec-left">
+        <div class="nec-label">Prochaine épreuve D3 · Manche ${ev.round || '?'} · Saison 2026</div>
+        <div class="nec-name">${escHtml(ev.name)}</div>
+        <div class="nec-meta">
+          <span>📅 ${escHtml(dateStr)}${ev.approximate ? '<span class="approx-note"> (heure approx.)</span>' : ''}</span>
+          ${lieu ? `<span>📍 ${escHtml(lieu)}</span>` : ''}
         </div>
+        ${links ? `<div class="nec-links">${links}</div>` : ''}
       </div>
-      <div>
-        ${event.startDateTime ? `<div class="countdown" id="countdown"></div>` : ''}
-        <div class="next-event-card__links" style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.75rem;justify-content:flex-end">
-          ${liveBtn}${noLive}${replayBtn}${resultsBtn}
-        </div>
+      <div class="nec-right">
+        ${ev.startDateTime ? '<div class="countdown" id="countdown"></div>' : ''}
       </div>`;
 
-    if (event.startDateTime) {
-      startCountdown(event.startDateTime, 'countdown');
-    }
+    if (ev.startDateTime) startCountdown(ev.startDateTime);
   }
 
-  // ── Calendrier complet ───────────────────────────────────────────────────
+  // ── Calendrier ───────────────────────────────────────────────────────────
 
   function renderCalendar(events) {
     const tbody = document.getElementById('calendar-tbody');
@@ -146,82 +208,54 @@
       if (empty) empty.hidden = false;
       return;
     }
-
     if (empty) empty.hidden = true;
 
     tbody.innerHTML = events.map(ev => {
-      const st = statusLabel(ev.status);
-      const liveBtn    = linkBtn(ev.liveUrl,    'btn-live btn',    '📺', 'Direct');
-      const replayBtn  = linkBtn(ev.replayUrl,  'btn-replay btn',  '🎬', 'Replay');
-      const resultsBtn = linkBtn(ev.resultsUrl, 'btn-results btn', '📊', 'Résultats');
-      const links = [liveBtn, replayBtn, resultsBtn].filter(Boolean).join(' ') || '<span style="color:#9ca3af;font-size:.82rem">—</span>';
+      const st    = statusLabel(ev.status);
+      const lieu  = [ev.city, ev.region].filter(Boolean).join(', ') || '—';
+      const links = eventButtons(ev);
 
-      return `<tr>
-        <td style="font-weight:600;color:var(--blue)">${ev.round ? `M${ev.round}` : '—'}</td>
-        <td>
-          <strong>${escHtml(ev.name)}</strong>
-          ${ev.circuit ? `<br><small style="color:var(--text-muted)">${escHtml(ev.circuit)}</small>` : ''}
-        </td>
-        <td>
-          ${ev.startDateTime ? formatDateShort(ev.startDateTime) : '—'}
-          ${ev.approximate ? '<br><small style="color:var(--text-muted)">heure approx.</small>' : ''}
-        </td>
-        <td>${ev.location ? escHtml(ev.location) : '—'}</td>
-        <td><span class="status-badge ${st.cls}">${st.icon} ${st.text}</span></td>
-        <td>${links}</td>
+      return `<tr class="row-${ev.status}">
+        <td class="td-round">M${ev.round || '?'}</td>
+        <td class="td-name"><strong>${escHtml(ev.name)}</strong></td>
+        <td class="td-date">${formatDateShort(ev.startDateTime, ev.approximate)}</td>
+        <td class="td-lieu">${escHtml(lieu)}</td>
+        <td class="td-status"><span class="status-badge ${st.cls}">${st.text}</span></td>
+        <td class="td-links">${links || '<span class="no-link">—</span>'}</td>
       </tr>`;
     }).join('');
-  }
-
-  // ── Mise à jour info ─────────────────────────────────────────────────────
-
-  function renderUpdateBar(lastUpdated) {
-    const bar = document.getElementById('update-bar');
-    if (!bar) return;
-    if (!lastUpdated) {
-      bar.textContent = 'Données non encore synchronisées.';
-      return;
-    }
-    const d = new Date(lastUpdated);
-    bar.innerHTML = `🔄 Dernière synchronisation : <strong>${d.toLocaleString('fr-FR', { timeZone: TZ })}</strong>`;
   }
 
   // ── Init ─────────────────────────────────────────────────────────────────
 
   async function init() {
+    initModal();
+
+    // Expose openPlayer globalement pour les boutons onclick inline
+    window.__openPlayer = openModal;
+
     try {
       const res = await fetch(DATA_URL + '?t=' + Date.now());
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
-      renderUpdateBar(data.lastUpdated);
+      const bar = document.getElementById('update-bar');
+      if (bar && data.lastUpdated) {
+        bar.innerHTML = `Sync : <strong>${new Date(data.lastUpdated).toLocaleString('fr-FR', { timeZone: TZ })}</strong>`;
+      }
 
-      const now = Date.now();
-      const upcoming = (data.events || []).filter(ev => {
-        if (!ev.startDateTime) return false;
-        return new Date(ev.startDateTime).getTime() > now - 3 * 3600000;
-      });
+      const now  = Date.now();
+      const next = (data.events || []).find(ev =>
+        ev.startDateTime && new Date(ev.startDateTime).getTime() > now - 3 * 3600000
+      ) || null;
 
-      // Prochaine = premier upcoming ou live
-      const next = upcoming[0] || null;
       renderNextEvent(next);
       renderCalendar(data.events || []);
 
     } catch (err) {
-      console.error('Erreur chargement données :', err);
-
+      console.error(err);
       const card = document.getElementById('next-event-card');
-      if (card) {
-        card.innerHTML = `
-          <div class="no-data">
-            <div class="no-data-icon">⚠️</div>
-            <p>Impossible de charger les données.</p>
-            <small>Vérifiez votre connexion ou relancez la synchronisation.</small>
-          </div>`;
-      }
-
-      const empty = document.getElementById('calendar-empty');
-      if (empty) empty.hidden = false;
+      if (card) card.innerHTML = `<div class="no-data"><div class="no-data-icon">⚠️</div><p>Impossible de charger les données.</p></div>`;
     }
   }
 

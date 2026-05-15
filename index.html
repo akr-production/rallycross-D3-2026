@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Rallycross D3 France 2026</title>
-  <meta name="description" content="Suivez le Rallycross France 2026 en catégorie D3 : calendrier, prochaine épreuve, liens live/replay/résultats.">
+  <meta name="description" content="Suivez le Rallycross France 2026 en catégorie D3 : calendrier, prochaine épreuve, live, replay, résultats.">
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
@@ -24,62 +24,49 @@
 
   <main>
 
-    <!-- Prochaine épreuve -->
     <div id="next-event-card" class="next-event-card">
-      <div>
-        <div class="label">Chargement…</div>
-        <div class="event-name" style="opacity:.4">—</div>
+      <div class="nec-left">
+        <div class="nec-label">Chargement…</div>
+        <div class="nec-name" style="opacity:.3">—</div>
       </div>
     </div>
 
-    <!-- Barre de sync -->
-    <div class="update-bar" id="update-bar">
-      🔄 Chargement des données…
-    </div>
+    <div class="update-bar" id="update-bar">Chargement…</div>
 
-    <!-- Calendrier complet -->
     <h2 class="section-title">Calendrier 2026 – Catégorie D3</h2>
 
     <div id="calendar-empty" class="no-data" hidden>
       <div class="no-data-icon">📅</div>
       <p>Le calendrier n'est pas encore disponible.</p>
-      <small>La synchronisation automatique tourne toutes les 6 heures. Revenez bientôt.</small>
     </div>
 
     <div style="overflow-x:auto">
-      <table class="calendar-table" aria-label="Calendrier Rallycross D3 2026">
+      <table class="calendar-table">
         <thead>
           <tr>
-            <th>Manche</th>
+            <th>N°</th>
             <th>Épreuve</th>
-            <th>Date</th>
+            <th>Date · Heure</th>
             <th>Lieu</th>
             <th>Statut</th>
-            <th>Liens</th>
+            <th>Vidéo</th>
           </tr>
         </thead>
         <tbody id="calendar-tbody">
-          <tr>
-            <td colspan="6" style="text-align:center;padding:2rem;color:var(--text-muted)">
-              Chargement…
-            </td>
-          </tr>
+          <tr><td colspan="6" style="text-align:center;padding:2rem;color:#9ca3af">Chargement…</td></tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Note source -->
-    <p style="margin-top:1rem;font-size:.82rem;color:var(--text-muted)">
-      Source : <a href="https://www.rallycrossfrance.com" target="_blank" rel="noopener">rallycrossfrance.com</a> •
-      Données mises à jour automatiquement toutes les 6 heures.
+    <p style="margin-top:.75rem;font-size:.78rem;color:#9ca3af">
+      ~ heure approximative (09:00 par défaut) · Source : <a href="https://rallycrossfrance.com/courses/calendrier/" target="_blank" rel="noopener">rallycrossfrance.com</a>
     </p>
 
   </main>
 
   <footer class="site-footer">
-    <p>Rallycross France 2026 – Catégorie D3 •
-       Source officielle : <a href="https://www.rallycrossfrance.com" target="_blank" rel="noopener">rallycrossfrance.com</a>
-    </p>
+    Rallycross France 2026 – D3 ·
+    <a href="https://rallycrossfrance.com" target="_blank" rel="noopener">rallycrossfrance.com</a>
   </footer>
 
   <script src="assets/app.js"></script>
