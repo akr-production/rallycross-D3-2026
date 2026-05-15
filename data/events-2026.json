@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-15T03:13:17.913Z",
+  "lastUpdated": "2026-05-15T21:39:02.598Z",
   "season": 2026,
   "category": "D3",
   "sourceUrl": "https://rallycrossfrance.com/courses/calendrier/",
@@ -40,8 +40,8 @@
       "status": "upcoming",
       "category": "D3",
       "calendarUrl": "https://rallycrossfrance.com/manches/271/",
-      "livePageUrl": null,
-      "liveUrl": null,
+      "livePageUrl": "https://www.its-live.net/live/rallycrossfr/2026/faleyras/live",
+      "liveUrl": "https://www.its-live.net/live/rallycrossfr/2026/faleyras/live",
       "liveEmbedUrl": null,
       "replayUrl": null,
       "resultsUrl": null,
