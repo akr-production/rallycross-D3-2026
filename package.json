@@ -1,0 +1,20 @@
+{
+  "name": "rallycross-d3-2026",
+  "version": "1.0.0",
+  "description": "Suivi Rallycross France 2026 – catégorie D3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "scrape": "node scripts/scrape-events-2026.js",
+    "rankings": "node scripts/update-rankings-2026.js",
+    "update-rankings": "node scripts/update-rankings-2026.js",
+    "notify": "node scripts/run-notifications.js",
+    "sync": "npm run scrape && npm run rankings && npm run notify"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

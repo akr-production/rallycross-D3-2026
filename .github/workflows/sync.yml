@@ -1,0 +1,67 @@
+name: Sync données D3 2026
+
+on:
+  schedule:
+    # Toutes les 6 heures (UTC)
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      skip_notifications:
+        description: 'Ignorer les notifications email'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    name: Scrape + Classement + Notifications
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Installer les dépendances
+        run: npm ci
+
+      - name: Scraper le calendrier
+        run: npm run scrape
+        continue-on-error: false
+
+      - name: Mettre à jour le classement
+        run: npm run rankings
+        continue-on-error: true
+
+      - name: Envoyer les notifications
+        if: ${{ github.event.inputs.skip_notifications != 'true' }}
+        run: npm run notify
+        continue-on-error: true
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TARGET_EMAIL:   ${{ secrets.TARGET_EMAIL }}
+          FROM_EMAIL:     ${{ secrets.FROM_EMAIL }}
+          NOTIF_MARGIN_MIN: '30'
+
+      - name: Committer les données si modifiées
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/events-2026.json data/rankings-2026.json data/notifications-log.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement dans les données — pas de commit."
+          else
+            git commit -m "chore(data): sync automatique $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi

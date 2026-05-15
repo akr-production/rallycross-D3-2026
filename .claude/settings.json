@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:rallycrossfrance.com)",
+      "Bash(curl -s -L https://rallycrossfrance.com/courses/calendrier/ -H 'User-Agent: Mozilla/5.0 \\(compatible; RXF-D3-Bot/1.0\\)' -H 'Accept-Language: fr-FR,fr;q=0.9' --max-time 20)",
+      "Bash(curl -s -L https://rallycrossfrance.com/courses/championnats-2026/ -H 'User-Agent: Mozilla/5.0 \\(compatible; RXF-D3-Bot/1.0\\)' -H 'Accept-Language: fr-FR,fr;q=0.9' --max-time 20)",
+      "Bash(curl -s -L https://rallycrossfrance.com/courses/championnats-2026/ -H 'User-Agent: Mozilla/5.0 \\(compatible; RXF-D3-Bot/1.0\\)' --max-time 20)",
+      "Bash(curl -s -L 'https://www.ffsa.org/championnats-et-coupes/championnat-de-france-de-rallycross-142?season=44&subCategory=6510' -H 'User-Agent: Mozilla/5.0 \\(compatible; RXF-D3-Bot/1.0\\)' --max-time 20)",
+      "Bash(curl -s 'https://www.ffsa.org/api/championships/142/standings?season=44&subCategory=6510' -H 'User-Agent: Mozilla/5.0' --max-time 10)",
+      "Bash(curl -s 'https://www.ffsa.org/championnats-et-coupes/championnat-de-france-de-rallycross-142?season=44&subCategory=6510')",
+      "Bash(curl -s \"https://www.ffsa.org/_next/data/$\\(curl -s 'https://www.ffsa.org/championnats-et-coupes/championnat-de-france-de-rallycross-142?season=44&subCategory=6510')",
+      "Bash(curl -s https://www.ffsa.org/_next/static/chunks/pages/championnats-et-coupes/%5Bslug%5D-7f53d73c35720ec2.js -H 'User-Agent: Mozilla/5.0' --max-time 10)",
+      "Bash(curl -s \"https://www.ffsa.org/\" -H \"User-Agent: Mozilla/5.0\" --max-time 10)",
+      "Bash(curl -s https://www.ffsa.org/_next/static/chunks/4074-d841392ab661c82a.js -H 'User-Agent: Mozilla/5.0' --max-time 15)",
+      "Bash(curl -s https://www.ffsa.org/_next/static/chunks/5497-37862afd871b9514.js -H 'User-Agent: Mozilla/5.0' --max-time 15)",
+      "Bash(npm install *)",
+      "Bash(node scripts/scrape-events-2026.js)",
+      "Bash(node -e ' *)",
+      "Bash(node scripts/update-rankings-2026.js)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git rm *)"
+    ]
+  }
+}

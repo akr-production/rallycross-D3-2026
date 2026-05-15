@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classement D3 – Rallycross France 2026</title>
+  <meta name="description" content="Classement général et résultats par épreuve du Rallycross France 2026, catégorie D3.">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="site-logo">
+        <span class="logo-badge">D3</span>
+        Rallycross France 2026
+      </a>
+      <nav class="site-nav">
+        <a href="index.html">Calendrier</a>
+        <a href="classement.html" class="active">Classement</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Barre de sync -->
+    <div class="update-bar" id="update-bar">
+      🔄 Chargement des données…
+    </div>
+
+    <!-- Note parsing -->
+    <div id="standings-note" class="alert alert-warning" hidden></div>
+
+    <!-- Classement général -->
+    <h2 class="section-title">Classement général – D3 2026</h2>
+
+    <div id="standings-empty" class="no-data" hidden>
+      <div class="no-data-icon">🏆</div>
+      <p>Le classement n'est pas encore disponible.</p>
+      <small>Les points seront mis à jour après chaque épreuve.</small>
+    </div>
+
+    <div style="overflow-x:auto;margin-bottom:2.5rem">
+      <table class="rankings-table" aria-label="Classement général D3 2026">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pilote</th>
+            <th>Voiture</th>
+            <th>Nationalité</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="standings-tbody">
+          <tr>
+            <td colspan="5" style="text-align:center;padding:2rem;color:var(--text-muted)">
+              Chargement…
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Résultats par épreuve -->
+    <h2 class="section-title">Résultats par épreuve</h2>
+    <div id="event-results-container"></div>
+
+    <!-- Note source -->
+    <p style="margin-top:1rem;font-size:.82rem;color:var(--text-muted)">
+      Source : <a href="https://www.rallycrossfrance.com" target="_blank" rel="noopener">rallycrossfrance.com</a> •
+      Données mises à jour automatiquement toutes les 6 heures.
+    </p>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Rallycross France 2026 – Catégorie D3 •
+       Source officielle : <a href="https://www.rallycrossfrance.com" target="_blank" rel="noopener">rallycrossfrance.com</a>
+    </p>
+  </footer>
+
+  <script src="assets/classement.js"></script>
+</body>
+</html>
