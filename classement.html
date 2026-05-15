@@ -26,31 +26,33 @@
 
     <div class="update-bar" id="update-bar">Chargement…</div>
 
-    <div id="results-embed-section" hidden>
-      <h2 class="section-title" id="results-embed-title">Résultats</h2>
-      <div class="results-embed-wrap">
-        <iframe id="results-embed-iframe" src="" allowfullscreen title="Résultats D3"></iframe>
-      </div>
-      <p class="embed-source-line">
-        Source : <a id="results-embed-link" href="#" target="_blank" rel="noopener">its-results.com</a>
-      </p>
-    </div>
+    <!-- Classement général championnat -->
+    <h2 class="section-title">Classement général – D3 2026</h2>
 
-    <div id="standings-embed-section" hidden>
-      <h2 class="section-title">Classement championnat – D3 2026</h2>
-      <div class="results-embed-wrap">
-        <iframe id="standings-embed-iframe" src="" allowfullscreen title="Classement championnat D3 2026"></iframe>
-      </div>
-      <p class="embed-source-line">
-        Source : <a id="standings-embed-link" href="#" target="_blank" rel="noopener">its-results.com</a>
-      </p>
-    </div>
-
-    <div id="no-results-msg" class="no-data" hidden>
+    <div id="championship-empty" class="no-data" hidden>
       <div class="no-data-icon">🏆</div>
-      <p>Aucun résultat disponible pour le moment.</p>
-      <small>Les résultats apparaîtront après la première épreuve.</small>
+      <p>Le classement n'est pas encore disponible.</p>
+      <small>Les points seront mis à jour après chaque épreuve.</small>
     </div>
+
+    <div id="championship-wrap" hidden style="overflow-x:auto;margin-bottom:2rem">
+      <table class="rankings-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Pilote</th>
+            <th>Voiture</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="championship-tbody"></tbody>
+      </table>
+    </div>
+
+    <!-- Résultats par épreuve -->
+    <h2 class="section-title" id="results-title" hidden>Résultats par épreuve</h2>
+
+    <div id="event-results-list"></div>
 
   </main>
 

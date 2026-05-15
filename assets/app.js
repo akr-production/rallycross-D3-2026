@@ -1,13 +1,15 @@
 /**
  * app.js – Frontend index.html
- * Embed YouTube replay et its-live.net live dans une modale plein écran.
  */
 
 (function () {
   'use strict';
 
-  const DATA_URL = 'data/events-2026.json';
+  const DATA_URL    = 'data/events-2026.json';
+  const RESULTS_URL = 'data/results-2026.json';
   const TZ = 'Europe/Paris';
+
+  let resultsData = {};  // keyed by event id
 
   // ── Utilitaires ──────────────────────────────────────────────────────────
 
@@ -66,20 +68,20 @@
     return url; // tentative d'embed direct — géré par la modale avec fallback
   }
 
-  // ── Modale player ─────────────────────────────────────────────────────────
+  // ── Modale (vidéo iframe + table résultats) ──────────────────────────────
 
-  let overlay, iframeWrap;
+  let overlay, modalInner;
 
   function initModal() {
     overlay = document.createElement('div');
     overlay.className = 'player-overlay';
     overlay.innerHTML = `
-      <div class="player-box">
+      <div class="player-box" id="player-box">
         <button class="player-close" title="Fermer">✕</button>
-        <div class="player-iframe-wrap" id="player-iframe-wrap"></div>
+        <div id="modal-inner"></div>
       </div>`;
     document.body.appendChild(overlay);
-    iframeWrap = document.getElementById('player-iframe-wrap');
+    modalInner = document.getElementById('modal-inner');
 
     overlay.querySelector('.player-close').addEventListener('click', closeModal);
     overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
@@ -88,7 +90,44 @@
 
   function openModal(embedUrl, title) {
     if (!overlay) return;
-    iframeWrap.innerHTML = `<iframe src="${escHtml(embedUrl)}" allowfullscreen allow="autoplay; fullscreen" title="${escHtml(title || '')}"></iframe>`;
+    const box = document.getElementById('player-box');
+    if (box) { box.className = 'player-box player-box--video'; }
+    modalInner.innerHTML = `<div class="player-iframe-wrap"><iframe src="${escHtml(embedUrl)}" allowfullscreen allow="autoplay; fullscreen" title="${escHtml(title || '')}"></iframe></div>`;
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openResultsModal(evId) {
+    if (!overlay) return;
+    const ev = resultsData[evId];
+    const box = document.getElementById('player-box');
+    if (box) { box.className = 'player-box player-box--results'; }
+
+    if (!ev || !ev.results || ev.results.length === 0) {
+      modalInner.innerHTML = `
+        <div class="results-modal-body">
+          <h3 class="results-modal-title">Résultats non disponibles</h3>
+          <p style="color:#6b7280;font-size:.9rem">Les résultats D3 pour cette épreuve n'ont pas encore été saisis.</p>
+        </div>`;
+    } else {
+      const rows = ev.results.map(r => `
+        <tr>
+          <td style="font-weight:800;color:#0f2847">${r.position}.</td>
+          <td><strong>${escHtml(r.driver)}</strong></td>
+          <td style="color:#6b7280">${r.car ? escHtml(r.car) : '—'}</td>
+          <td style="font-weight:800;color:#0f2847;font-size:1rem">${r.points != null ? r.points : '—'}</td>
+        </tr>`).join('');
+
+      modalInner.innerHTML = `
+        <div class="results-modal-body">
+          <h3 class="results-modal-title">Résultats D3 – ${escHtml(ev.name)}</h3>
+          <table class="results-modal-table">
+            <thead><tr><th>#</th><th>Pilote</th><th>Voiture</th><th>Points</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
+    }
+
     overlay.classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -96,7 +135,7 @@
   function closeModal() {
     if (!overlay) return;
     overlay.classList.remove('open');
-    iframeWrap.innerHTML = '';          // stop la vidéo
+    modalInner.innerHTML = '';
     document.body.style.overflow = '';
   }
 
@@ -124,6 +163,12 @@
     return `<button class="btn btn-replay" onclick="${onclickOpenPlayer(src, 'Replay')}">▶ Replay</button>`;
   }
 
+  /** Bouton résultats : ouvre une table depuis results-2026.json */
+  function resultsBtn(evId) {
+    const onclick = `window.__openResults(${JSON.stringify(evId)})`.replace(/"/g, '&quot;');
+    return `<button class="btn btn-results" onclick="${onclick}">📊 Résultats</button>`;
+  }
+
   /** Retourne les boutons selon le statut uniquement */
   function eventButtons(ev) {
     const s = ev.status;
@@ -133,7 +178,7 @@
     if (s === 'finished' || s === 'done') {
       return [
         replayBtn(ev.replayUrl),
-        modalBtn(ev.resultsUrl, 'btn-results', '📊 Résultats'),
+        resultsBtn(ev.id),
       ].filter(Boolean).join(' ');
     }
     return ''; // upcoming → rien
@@ -229,9 +274,14 @@
 
   async function init() {
     initModal();
+    window.__openPlayer  = openModal;
+    window.__openResults = openResultsModal;
 
-    // Expose openPlayer globalement pour les boutons onclick inline
-    window.__openPlayer = openModal;
+    // Charge les résultats en parallèle (silencieux si absent)
+    fetch(RESULTS_URL + '?t=' + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d && d.eventResults) resultsData = d.eventResults; })
+      .catch(() => {});
 
     try {
       const res = await fetch(DATA_URL + '?t=' + Date.now());

@@ -1,47 +1,88 @@
 /**
- * classement.js – classement.html
- * Affiche les résultats de la dernière épreuve terminée via iframe its-results.com
- * + classement championnat si disponible dans une seconde iframe.
+ * classement.js
+ * Lit data/results-2026.json (fichier maintenu manuellement après chaque épreuve).
+ * Affiche le classement championnat + les résultats par épreuve.
  */
 
 (function () {
   'use strict';
 
-  const EVENTS_URL = 'data/events-2026.json';
+  const RESULTS_URL = 'data/results-2026.json';
   const TZ = 'Europe/Paris';
 
-  function escHtml(s) {
+  function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function showSection(id) {
-    const el = document.getElementById(id);
-    if (el) el.hidden = false;
+  function medalIcon(pos) {
+    if (pos === 1) return '🥇';
+    if (pos === 2) return '🥈';
+    if (pos === 3) return '🥉';
+    return pos + '.';
   }
 
-  function hideSection(id) {
-    const el = document.getElementById(id);
-    if (el) el.hidden = true;
+  function show(id) { const el = document.getElementById(id); if (el) el.hidden = false; }
+  function hide(id) { const el = document.getElementById(id); if (el) el.hidden = true; }
+
+  function renderChampionship(rows) {
+    const tbody = document.getElementById('championship-tbody');
+    const wrap  = document.getElementById('championship-wrap');
+    const empty = document.getElementById('championship-empty');
+    if (!tbody) return;
+
+    if (!rows || rows.length === 0) {
+      show('championship-empty');
+      return;
+    }
+
+    hide('championship-empty');
+    show('championship-wrap');
+    tbody.innerHTML = rows.map(p => `
+      <tr>
+        <td class="pos-medal">${medalIcon(p.position)}</td>
+        <td><strong>${esc(p.driver)}</strong></td>
+        <td>${p.car ? esc(p.car) : '—'}</td>
+        <td class="points-cell">${p.points != null ? p.points : '—'}</td>
+      </tr>`).join('');
   }
 
-  function setIframe(iframeId, url) {
-    const el = document.getElementById(iframeId);
-    if (el) el.src = url;
-  }
+  function renderEventResults(eventResults) {
+    const container = document.getElementById('event-results-list');
+    if (!container) return;
 
-  function setText(id, text) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = text;
-  }
+    const keys = Object.keys(eventResults || {});
+    if (keys.length === 0) return;
 
-  function setLink(id, url) {
-    const el = document.getElementById(id);
-    if (el) el.href = url;
+    show('results-title');
+
+    container.innerHTML = keys.map(evId => {
+      const ev = eventResults[evId];
+      const rows = ev.results || [];
+      if (rows.length === 0) return '';
+
+      const thead = `<tr><th>#</th><th>Pilote</th><th>Voiture</th><th>Points</th></tr>`;
+      const tbody = rows.map(r => `
+        <tr>
+          <td class="pos-medal">${medalIcon(r.position)}</td>
+          <td><strong>${esc(r.driver)}</strong></td>
+          <td>${r.car ? esc(r.car) : '—'}</td>
+          <td class="points-cell">${r.points != null ? r.points : '—'}</td>
+        </tr>`).join('');
+
+      return `
+        <h3 class="event-result-title">Manche ${ev.round || ''} – ${esc(ev.name)}</h3>
+        <div style="overflow-x:auto;margin-bottom:2rem">
+          <table class="rankings-table">
+            <thead>${thead}</thead>
+            <tbody>${tbody}</tbody>
+          </table>
+        </div>`;
+    }).join('');
   }
 
   async function init() {
     try {
-      const res = await fetch(EVENTS_URL + '?t=' + Date.now());
+      const res = await fetch(RESULTS_URL + '?t=' + Date.now());
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
 
@@ -50,37 +91,14 @@
         bar.innerHTML = `Sync : <strong>${new Date(data.lastUpdated).toLocaleString('fr-FR', { timeZone: TZ })}</strong>`;
       }
 
-      const finished = (data.events || []).filter(ev =>
-        (ev.status === 'finished' || ev.status === 'done') && ev.resultsUrl
-      );
-
-      if (finished.length === 0) {
-        showSection('no-results-msg');
-        return;
-      }
-
-      // Dernière épreuve terminée → résultats de course
-      const last = finished[finished.length - 1];
-      setText('results-embed-title', `Résultats – ${last.name}`);
-      setIframe('results-embed-iframe', last.resultsUrl);
-      setLink('results-embed-link', last.resultsUrl);
-      showSection('results-embed-section');
-
-      // Si plusieurs épreuves terminées, cherche l'URL championnat
-      // (its-results montre le classement championnat dans la même page via la navigation D3)
-      // On utilise la même URL pour les deux iframes pour l'instant,
-      // puisque c'est dans la même page its-results que se trouve le championnat.
-      if (finished.length >= 1) {
-        setIframe('standings-embed-iframe', last.resultsUrl);
-        setLink('standings-embed-link', last.resultsUrl);
-        showSection('standings-embed-section');
-      }
+      renderChampionship(data.championship || []);
+      renderEventResults(data.eventResults || {});
 
     } catch (err) {
       console.error(err);
-      showSection('no-results-msg');
-      const msg = document.querySelector('#no-results-msg p');
-      if (msg) msg.textContent = 'Impossible de charger les résultats.';
+      show('championship-empty');
+      const msg = document.querySelector('#championship-empty p');
+      if (msg) msg.textContent = 'Impossible de charger le classement.';
     }
   }
 
