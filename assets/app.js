@@ -100,41 +100,40 @@
     document.body.style.overflow = '';
   }
 
-  // ── Boutons (boutons embed + lien externe fallback) ───────────────────────
+  // ── Boutons ───────────────────────────────────────────────────────────────
 
   /**
-   * Bouton qui :
-   *  - pour YouTube → ouvre l'embed dans la modale
-   *  - pour its-live → ouvre l'embed dans la modale (fallback nouvel onglet si bloqué)
-   *  - sinon → lien externe simple
+   * Construit un onclick="..." avec les guillemets correctement encodés en &quot;
+   * pour éviter de casser l'attribut HTML quand JSON.stringify génère des ".
    */
-  function embedBtn(url, cls, label, isLive) {
-    if (!url) return '';
-    const yt  = youtubeEmbedUrl(url);
-    const src = yt || (isLive ? liveEmbedUrl(url) : null);
-
-    if (src) {
-      const title = isLive ? 'Direct Live' : 'Replay';
-      return `<button class="btn ${cls}" onclick="window.__openPlayer(${JSON.stringify(src)}, ${JSON.stringify(title)})">${label}</button>`;
-    }
-    return `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="btn ${cls}">${label}</a>`;
+  function onclickOpenPlayer(src, title) {
+    const js = `window.__openPlayer(${JSON.stringify(src)},${JSON.stringify(title)})`;
+    return js.replace(/"/g, '&quot;');
   }
 
-  function externalBtn(url, cls, label) {
+  /** Ouvre n'importe quelle URL dans la modale iframe */
+  function modalBtn(url, cls, label) {
     if (!url) return '';
-    return `<a href="${escHtml(url)}" target="_blank" rel="noopener" class="btn ${cls}">${label}</a>`;
+    return `<button class="btn ${cls}" onclick="${onclickOpenPlayer(url, label)}">${escHtml(label)}</button>`;
+  }
+
+  /** Bouton replay : YouTube → embed URL; autre → iframe direct dans modale */
+  function replayBtn(url) {
+    if (!url) return '';
+    const src = youtubeEmbedUrl(url) || url;
+    return `<button class="btn btn-replay" onclick="${onclickOpenPlayer(src, 'Replay')}">▶ Replay</button>`;
   }
 
   /** Retourne les boutons selon le statut uniquement */
   function eventButtons(ev) {
     const s = ev.status;
     if (s === 'live') {
-      return embedBtn(ev.liveUrl || ev.livePageUrl, 'btn-live', '🔴 Live', true);
+      return modalBtn(ev.liveUrl || ev.livePageUrl, 'btn-live', '🔴 Live');
     }
     if (s === 'finished' || s === 'done') {
       return [
-        embedBtn(ev.replayUrl,  'btn-replay',  '▶ Replay', false),
-        externalBtn(ev.resultsUrl, 'btn-results', '📊 Résultats'),
+        replayBtn(ev.replayUrl),
+        modalBtn(ev.resultsUrl, 'btn-results', '📊 Résultats'),
       ].filter(Boolean).join(' ');
     }
     return ''; // upcoming → rien

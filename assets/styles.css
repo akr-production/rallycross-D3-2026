@@ -329,6 +329,28 @@ main { flex: 1; max-width: 1100px; width: 100%; margin: 1.75rem auto; padding: 0
 .pos-medal { font-size: 1.1rem; }
 .points-cell { font-weight: 800; color: var(--blue); font-size: 1rem; }
 
+/* ===== Results embed (iframe its-results.com) ===== */
+.results-embed-wrap {
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  margin-bottom: .75rem;
+  height: 680px;
+}
+
+.results-embed-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+.embed-source-line {
+  font-size: .8rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
 /* ===== No data ===== */
 .no-data { text-align: center; padding: 3rem 1rem; color: var(--text-muted); }
 .no-data-icon { font-size: 2.5rem; margin-bottom: .75rem; }

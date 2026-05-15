@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-05-15T02:29:11.097Z",
+  "lastUpdated": "2026-05-15T03:13:17.913Z",
   "season": 2026,
   "category": "D3",
   "sourceUrl": "https://rallycrossfrance.com/courses/calendrier/",
@@ -19,10 +19,14 @@
       "livePageUrl": "https://www.its-live.net/live/rallycrossfr/2026/lessay/live",
       "liveUrl": "https://www.its-live.net/live/rallycrossfr/2026/lessay/live",
       "liveEmbedUrl": null,
-      "resultsUrl": "https://www.its-results.com/rallycrossfr/2026/5347a64c-06ce-40fb-9406-fd66b5bae23c",
       "replayUrl": "https://www.youtube.com/watch?v=lzjk1mJ4m18",
+      "resultsUrl": "https://www.its-results.com/rallycrossfr/2026/5347a64c-06ce-40fb-9406-fd66b5bae23c",
       "entryListUrl": "https://rallycrossfrance.com/wp-content/uploads/2026/04/LISTE-DES-ENGAGES_LESSAY_2026-_V4.pdf",
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": "5347a64c-06ce-40fb-9406-fd66b5bae23c",
+      "d3FolderId": "f780e480-08b4-49b1-9d9a-26e3a615389d",
+      "finalResultId": "06ba386a-56d1-4bfa-b2d2-eb7158e18e00",
+      "championshipResultId": "6b669839-6838-4196-92c0-3520a9866305",
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "faleyras-2026",
@@ -39,10 +43,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": "https://rallycrossfrance.com/wp-content/uploads/2026/05/LISTE-DES-ENGAGES_FALEYRAS_2026-_V1-1.pdf",
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "chateauroux-2026",
@@ -59,10 +67,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": null,
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "touraine-2026",
@@ -79,10 +91,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": null,
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "kerlabo-2026",
@@ -99,10 +115,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": null,
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "loheac-2026",
@@ -119,10 +139,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": null,
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "mayenne-2026",
@@ -139,10 +163,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": null,
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
       "id": "dreux-2026",
@@ -159,10 +187,14 @@
       "livePageUrl": null,
       "liveUrl": null,
       "liveEmbedUrl": null,
-      "resultsUrl": null,
       "replayUrl": null,
+      "resultsUrl": null,
       "entryListUrl": null,
-      "notes": "Manche issue du calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste des engagés/règlement particulier. Horaires approximatifs (09:00–18:00 Europe/Paris)."
+      "itsEventId": null,
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
+      "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     }
   ]
 }
