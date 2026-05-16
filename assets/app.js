@@ -11,7 +11,7 @@
 
   let resultsData = {};  // keyed by event id
 
-  // ── Utilitaires ──────────────────────────────────────────────────────────
+  // ── Utilitaires ─────────────────────────────────────────────────────────
 
   function escHtml(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -47,7 +47,7 @@
     return map[status] || map.upcoming;
   }
 
-  // ── Embed URLs ────────────────────────────────────────────────────────────
+  // ── Embed URLs ─────────────────────────────────────────────────────────
 
   /** Extrait l'ID YouTube depuis une URL watch?v= ou youtu.be */
   function youtubeEmbedUrl(url) {
@@ -57,15 +57,12 @@
   }
 
   /**
-   * URL embed pour its-live.net.
-   * Format page : https://www.its-live.net/live/rallycrossfr/2026/lessay/live
-   * Le site its-live.net ne propose pas d'iframe officiel, mais on peut tenter
-   * d'afficher la page elle-même en iframe. Si bloqué (X-Frame-Options), on
-   * ouvre dans un nouvel onglet à la place.
+   * URL embed pour YouTube Live.
+   * Si l'URL est un lien YouTube, extrait l'ID et retourne l'URL embed.
    */
   function liveEmbedUrl(url) {
     if (!url) return null;
-    return url; // tentative d'embed direct — géré par la modale avec fallback
+    return youtubeEmbedUrl(url) || url;
   }
 
   // ── Modale (vidéo iframe + table résultats) ──────────────────────────────
@@ -139,7 +136,7 @@
     document.body.style.overflow = '';
   }
 
-  // ── Boutons ───────────────────────────────────────────────────────────────
+  // ── Boutons ──────────────────────────────────────────────────────────
 
   /**
    * Construit un onclick="..." avec les guillemets correctement encodés en &quot;
@@ -163,23 +160,17 @@
     return `<button class="btn btn-replay" onclick="${onclickOpenPlayer(src, 'Replay')}">▶ Replay</button>`;
   }
 
-  /** Bouton résultats : ouvre une table depuis results-2026.json */
-  function resultsBtn(evId) {
-    const onclick = `window.__openResults(${JSON.stringify(evId)})`.replace(/"/g, '&quot;');
-    return `<button class="btn btn-results" onclick="${onclick}">📊 Résultats</button>`;
-  }
-
   /** Retourne les boutons selon le statut uniquement */
   function eventButtons(ev) {
     const s = ev.status;
     if (s === 'live') {
-      return modalBtn(ev.liveUrl || ev.livePageUrl, 'btn-live', '🔴 Live');
+      // Utilise toujours YouTube Live
+      const liveUrl = ev.liveUrl || ev.livePageUrl;
+      const embedUrl = liveEmbedUrl(liveUrl);
+      return modalBtn(embedUrl, 'btn-live', '🔴 Live');
     }
     if (s === 'finished' || s === 'done') {
-      return [
-        replayBtn(ev.replayUrl),
-        resultsBtn(ev.id),
-      ].filter(Boolean).join(' ');
+      return replayBtn(ev.replayUrl);
     }
     return ''; // upcoming → rien
   }
@@ -240,7 +231,7 @@
     if (ev.startDateTime) startCountdown(ev.startDateTime);
   }
 
-  // ── Calendrier ───────────────────────────────────────────────────────────
+  // ── Calendrier ─────────────────────────────────────────────────────────
 
   function renderCalendar(events) {
     const tbody = document.getElementById('calendar-tbody');
@@ -270,7 +261,7 @@
     }).join('');
   }
 
-  // ── Init ─────────────────────────────────────────────────────────────────
+  // ── Init ───────────────────────────────────────────────────────────
 
   async function init() {
     initModal();
