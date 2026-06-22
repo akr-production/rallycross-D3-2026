@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-21T13:47:10.354Z",
+  "lastUpdated": "2026-06-22T02:44:36.817Z",
   "season": 2026,
   "category": "D3",
   "sourceUrl": "https://rallycrossfrance.com/courses/calendrier/",
@@ -61,7 +61,7 @@
       "startDateTime": "2026-06-20T09:00:00+02:00",
       "endDateTime": "2026-06-21T18:00:00+02:00",
       "approximate": true,
-      "status": "live",
+      "status": "finished",
       "category": "D3",
       "calendarUrl": "https://rallycrossfrance.com/manches/chateauroux/",
       "livePageUrl": null,
