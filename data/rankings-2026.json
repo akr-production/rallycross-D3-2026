@@ -1,10 +1,10 @@
 {
   "lastUpdated": null,
-  "lastChecked": "2026-07-13T14:03:51.812Z",
+  "lastChecked": "2026-07-13T19:10:55.461Z",
   "season": 2026,
   "category": "D3",
-  "rankingsSourceUrl": "https://www.ffsa.org/championnats-et-coupes/championnat-de-france-de-rallycross-142?season=44&subCategory=6510#classements",
-  "parsingNote": "Classement D3 non accessible automatiquement (rendu JS côté client sur ffsa.org). Consultez : https://www.ffsa.org/championnats-et-coupes/championnat-de-france-de-rallycross-142?season=44&subCategory=6510#classements",
+  "rankingsSourceUrl": "https://rallycrossfrance.com/rallycross/embed/#?secret=MEuCDuZuUN#?secret=JWaHcrPbD6",
+  "parsingNote": "Classement D3 non accessible automatiquement (rendu JS côté client sur ffsa.org). Consultez : https://rallycrossfrance.com/rallycross/embed/#?secret=MEuCDuZuUN#?secret=JWaHcrPbD6",
   "generalRanking": [],
   "eventResults": {}
 }
