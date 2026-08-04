@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-04T01:25:17.526Z",
+  "lastUpdated": "2026-08-04T08:19:35.975Z",
   "season": 2026,
   "category": "D3",
   "sourceUrl": "https://rallycrossfrance.com/courses/calendrier/",
@@ -23,9 +23,9 @@
       "resultsUrl": "https://www.its-results.com/rallycrossfr/2026/5347a64c-06ce-40fb-9406-fd66b5bae23c",
       "entryListUrl": "https://rallycrossfrance.com/wp-content/uploads/2026/04/LISTE-DES-ENGAGES_LESSAY_2026-_V4.pdf",
       "itsEventId": "5347a64c-06ce-40fb-9406-fd66b5bae23c",
-      "d3FolderId": "f780e480-08b4-49b1-9d9a-26e3a615389d",
-      "finalResultId": "06ba386a-56d1-4bfa-b2d2-eb7158e18e00",
-      "championshipResultId": "6b669839-6838-4196-92c0-3520a9866305",
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
       "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
@@ -47,9 +47,9 @@
       "resultsUrl": "https://www.its-results.com/rallycrossfr/2026/eb383284-45d2-4a8f-839c-949a8fbbeda2",
       "entryListUrl": "https://rallycrossfrance.com/wp-content/uploads/2026/05/LISTE-DES-ENGAGES_FALEYRAS_2026-_V1-1.pdf",
       "itsEventId": "eb383284-45d2-4a8f-839c-949a8fbbeda2",
-      "d3FolderId": "f9d2578d-1db9-4d7d-9d78-5b88de65c768",
-      "finalResultId": "b9463d4f-3d3f-4c0b-b578-145391a4c1f8",
-      "championshipResultId": "8f4a495b-1f85-4bb6-a52c-6bff8db25603",
+      "d3FolderId": null,
+      "finalResultId": null,
+      "championshipResultId": null,
       "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
     {
@@ -95,8 +95,8 @@
       "resultsUrl": "https://www.its-results.com/rallycrossfr/2026/6c2c9680-3295-4330-b00c-e07306e3c334",
       "entryListUrl": "https://rallycrossfrance.com/wp-content/uploads/2026/07/LISTE-DES-ENGAGES_PONT_DE_RUAN_2026-_V1.pdf",
       "itsEventId": "6c2c9680-3295-4330-b00c-e07306e3c334",
-      "d3FolderId": "6876e940-24ef-4f90-bbec-c82b1d8977b3",
-      "finalResultId": "452b5112-0b81-4878-9c15-7279dcd24b06",
+      "d3FolderId": null,
+      "finalResultId": null,
       "championshipResultId": null,
       "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
@@ -119,8 +119,8 @@
       "resultsUrl": "https://www.its-results.com/rallycrossfr/2026/91a3c818-d726-41d1-9da5-5343c75da25a",
       "entryListUrl": "https://rallycrossfrance.com/wp-content/uploads/2026/07/LISTE-DES-ENGAGES_KERLABO_2026-_V1BIS.pdf",
       "itsEventId": "91a3c818-d726-41d1-9da5-5343c75da25a",
-      "d3FolderId": "45c739de-cee3-43b7-beca-ae194c6001fe",
-      "finalResultId": "2b5b49f1-6b64-4824-9713-0205b10bb243",
+      "d3FolderId": null,
+      "finalResultId": null,
       "championshipResultId": null,
       "notes": "Manche calendrier officiel Rallycross France 2026 ; présence D3 à confirmer via liste engagés. Horaires approx. (09:00–18:00 Europe/Paris)."
     },
