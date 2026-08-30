@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-30T15:41:15.826Z",
+  "lastUpdated": "2026-08-30T20:16:10.130Z",
   "season": 2026,
   "category": "D3",
   "sourceUrl": "https://rallycrossfrance.com/courses/calendrier/",
@@ -133,7 +133,7 @@
       "startDateTime": "2026-08-28T09:00:00+02:00",
       "endDateTime": "2026-08-30T18:00:00+02:00",
       "approximate": true,
-      "status": "live",
+      "status": "finished",
       "category": "D3",
       "calendarUrl": "https://rallycrossfrance.com/manches/loheac/",
       "livePageUrl": null,
