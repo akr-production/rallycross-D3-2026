@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-10-10T03:16:55.660Z",
+  "lastUpdated": "2026-10-10T11:33:27.307Z",
   "season": 2026,
   "category": "D3",
   "sourceUrl": "https://rallycrossfrance.com/courses/calendrier/",
@@ -181,7 +181,7 @@
       "startDateTime": "2026-10-10T09:00:00+02:00",
       "endDateTime": "2026-10-11T18:00:00+02:00",
       "approximate": true,
-      "status": "upcoming",
+      "status": "live",
       "category": "D3",
       "calendarUrl": "https://rallycrossfrance.com/manches/dreux/",
       "livePageUrl": null,
